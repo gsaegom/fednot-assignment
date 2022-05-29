@@ -20,8 +20,8 @@ public class ContactController {
 
     //TODO: Consider renaming methods
     @GetMapping
-    public List<Contact> getContacts() {
-        return contactService.getContacts();
+    public List<Contact> getContacts(@RequestParam(value = "isDeleted", required = false, defaultValue = "false") boolean isDeleted) {
+        return contactService.getContacts(isDeleted);
     }
 
     @GetMapping

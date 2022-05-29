@@ -1,10 +1,18 @@
 package be.fednot.testguillermo.model;
 
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity(name = "ADDRESSES")
+@SQLDelete(sql = "UPDATE ADDRESSES SET deleted = true WHERE id=?")
+@FilterDef(name = "deletedProductFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedProductFilter", condition = "deleted = :isDeleted")
 public class Address {
     @Id
     private Long id;
@@ -14,6 +22,7 @@ public class Address {
     private String postcode;
     private String city;
     private String country;
+    private boolean deleted = Boolean.FALSE;
 
     public Long getId() {
         return id;
@@ -61,5 +70,13 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }
