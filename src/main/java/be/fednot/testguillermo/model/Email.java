@@ -6,6 +6,9 @@ import java.util.regex.Pattern;
 @Embeddable
 public class Email {
     //TODO: Double-check and improve
+//TODO: Validation is not checked since setters are used (instead of Constructors). See how to make this work.
+    public Email() {
+    }
 
     public final static String EMAIL_PATTERN = "^([\\p{L}-_.]+){1,64}@([\\p{L}-_.]+){2,255}.[a-z]{2,}$";
 
@@ -13,6 +16,14 @@ public class Email {
 
     public Email(String email) {
         Validation.checkThat(Pattern.matches(EMAIL_PATTERN, email), "Email address must be valid");
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
     }
 }

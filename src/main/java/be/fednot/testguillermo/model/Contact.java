@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.util.List;
 
 //TODO: Use Lombok?
-@Entity(name = "contacts")
+@Entity(name = "CONTACTS")
 public class Contact {
-
+    //TODO: Figure out @GeneratedValue
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Embedded
     private FullName fullName;
@@ -16,8 +16,15 @@ public class Contact {
     private Email email;
     @Embedded
     private PhoneNumber phoneNumber;
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "CONTACTS_COMPANIES",
+            joinColumns = @JoinColumn(name = "CONTACTS_ID",referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "COMPANIES_ID",referencedColumnName = "ID"))
     private List<Company> companies;
+    //TODO: Multiple people could have the same address. Many to one?
+    @OneToOne
+    private Address address;
 
     public Contact() {
     }
@@ -46,11 +53,24 @@ public class Contact {
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
+
     public List<Company> getCompanies() {
         return companies;
     }
 
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setCompanies(List<Company> companies) {
+        this.companies = companies;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
