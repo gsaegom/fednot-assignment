@@ -9,15 +9,13 @@ import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import java.util.List;
 
-//TODO: Use Lombok?
 @Entity(name = "CONTACTS")
 @SQLDelete(sql = "UPDATE CONTACTS SET deleted = true WHERE id=?")
 @FilterDef(name = "deletedContactFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
 @Filter(name = "deletedContactFilter", condition = "deleted = :isDeleted")
 public class Contact {
-    //TODO: Figure out @GeneratedValue
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Embedded
     private FullName fullName;
@@ -31,7 +29,6 @@ public class Contact {
             joinColumns = @JoinColumn(name = "CONTACTS_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "COMPANIES_ID", referencedColumnName = "ID"))
     private List<Company> companies;
-    //TODO: Multiple people could have the same address. Many to one?
     @OneToOne
     private Address address;
 

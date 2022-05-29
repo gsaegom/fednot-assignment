@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 @Embeddable
 public class VATNumber {
 
-    //TODO:Double-check and try to find a better option
     public static final String VAT_PATTERN = "^(?=([A-Za-z]{2,4}))\\1(?![\\W_]+$)(?=.{2,12}$)[-_ \\d]*(?:[a-zA-Z][-_ \\d]*){0,2}$";
     private String vatNumber;
 

@@ -4,9 +4,12 @@ import be.fednot.testguillermo.model.Address;
 import be.fednot.testguillermo.model.Company;
 import be.fednot.testguillermo.model.Contact;
 import be.fednot.testguillermo.repository.CompanyRepository;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Service
@@ -16,14 +19,20 @@ public class CompanyService {
     private CompanyRepository companyRepository;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private EntityManager entityManager;
 
 
-    public List<Company> findAll() {
-        return companyRepository.findAll();
+    public List<Company> findAll(boolean isDeleted) {
+        Session session = entityManager.unwrap(Session.class);
+        Filter filter = session.enableFilter("deletedCompanyFilter");
+        filter.setParameter("isDeleted", isDeleted);
+        List<Company> companies = companyRepository.findAll();
+        session.disableFilter("deletedCompanyFilter");
+        return companies;
     }
 
     public Company findCompany(Long id) {
-        //TODO:Think about the orElse
         return companyRepository.findById(id).orElse(null);
     }
 
@@ -31,16 +40,21 @@ public class CompanyService {
         return companyRepository.saveAndFlush(contact);
     }
 
-    //TODO:Put some thought about how to do this.
-//    public Company updateCompany(@PathVariable Long id, @RequestBody Company contact) {
-//
-//    }
+    public Company updateCompany(Long id, Company newCompany) {
+        companyRepository.findById(id).ifPresent(company -> {
+            company.setName(newCompany.getName());
+            company.setContacts(newCompany.getContacts());
+            company.setVatNumber(newCompany.getVatNumber());
+            company.setAddress(newCompany.getAddress());
+            company.setAddresses(newCompany.getAddresses());
+        });
+        return companyRepository.saveAndFlush(companyRepository.findById(id).get());
+    }
+
     public void deleteCompany(Long id) {
         companyRepository.deleteById(id);
     }
 
-    //TODO:Refactor these two methods
-    //TODO:Consider use address id instead of object
     public Company addAddress(Long id, Long addressId) {
         companyRepository.findById(id).ifPresent(company -> company.getAddresses().add(addressService.findAddress(addressId)));
         return companyRepository.saveAndFlush(companyRepository.findById(id).get());
@@ -60,8 +74,9 @@ public class CompanyService {
 
         return companyRepository.saveAndFlush(companyRepository.findById(id).get());
     }
-    //TODO: Remove companies from contact. DTO?
-    public List<Contact> getContacts(Long id){
+
+    public List<Contact> getContacts(Long id) {
         return findCompany(id).getContacts();
     }
+
 }

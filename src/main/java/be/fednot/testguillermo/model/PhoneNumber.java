@@ -18,7 +18,6 @@ public class PhoneNumber {
     }
 
     public PhoneNumber(String phoneNumber) {
-        //TODO: Use PhoneNumberUtil.isPossibleNumber()
         Validation.checkThat(phoneNumber != null && !phoneNumber.isEmpty(), "phone number must not be empty or null");
         Validation.checkThat(Pattern.matches(PHONE_NUMBER_PATTERN, phoneNumber), "Phone number must be valid");
         this.phoneNumber = phoneNumber;

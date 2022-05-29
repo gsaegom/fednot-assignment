@@ -1,27 +1,31 @@
 package be.fednot.testguillermo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity(name = "ADDRESSES")
 @SQLDelete(sql = "UPDATE ADDRESSES SET deleted = true WHERE id=?")
-@FilterDef(name = "deletedProductFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
-@Filter(name = "deletedProductFilter", condition = "deleted = :isDeleted")
+@FilterDef(name = "deletedAddressFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedAddressFilter", condition = "deleted = :isDeleted")
 public class Address {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //TODO: Value type street
     private String streetName;
     private String streetNumber;
     private String postcode;
     private String city;
     private String country;
+    @JsonIgnore
     private boolean deleted = Boolean.FALSE;
 
     public Long getId() {

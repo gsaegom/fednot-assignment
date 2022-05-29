@@ -21,7 +21,7 @@ public class ContactController {
     //TODO: Consider renaming methods
     @GetMapping
     public List<Contact> getContacts(@RequestParam(value = "isDeleted", required = false, defaultValue = "false") boolean isDeleted) {
-        return contactService.getContacts(isDeleted);
+        return contactService.findAll(isDeleted);
     }
 
     @GetMapping
@@ -37,12 +37,11 @@ public class ContactController {
         return contactService.createContact(contact);
     }
 
-    //TODO:Put some thought about how to do this.
-//    @PutMapping
-//    @RequestMapping("/{id}")
-//    public Contact updateContact(@PathVariable Long id, @RequestBody Contact contact) {
-//
-//    }
+    @PutMapping
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public Contact updateContact(@PathVariable Long id, @RequestBody Contact contact) {
+        return contactService.updateContact(id, contact);
+    }
 
     @DeleteMapping
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -18,16 +18,14 @@ public class CompanyController {
     private CompanyService companyService;
 
 
-    //TODO: Consider renaming methods
     @GetMapping
-    public List<Company> getCompanies() {
-        return companyService.findAll();
+    public List<Company> getCompanies(@RequestParam(value = "isDeleted", required = false, defaultValue = "false") boolean isDeleted) {
+        return companyService.findAll(isDeleted);
     }
 
     @GetMapping
     @RequestMapping("/{id}")
     public Company getCompany(@PathVariable Long id) {
-        //TODO:Think about the orElse
         return companyService.findCompany(id);
     }
 
@@ -37,12 +35,11 @@ public class CompanyController {
         return companyService.createCompany(contact);
     }
 
-    //TODO:Put some thought about how to do this.
-//    @PutMapping
-//    @RequestMapping("/{id}")
-//    public Company updateCompany(@PathVariable Long id, @RequestBody Company contact) {
-//
-//    }
+    @PutMapping
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public Company updateCompany(@PathVariable Long id, @RequestBody Company company) {
+        return companyService.updateCompany(id, company);
+    }
 
     @DeleteMapping
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -51,19 +48,19 @@ public class CompanyController {
     }
 
     @PutMapping
-    @RequestMapping(value = "/{id}/add-address/{addressId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/address/{addressId}", method = RequestMethod.PUT)
     public Company addAddress(@PathVariable Long id, @PathVariable Long addressId) {
         return companyService.addAddress(id, addressId);
     }
 
     @PutMapping
-    @RequestMapping(value = "/{id}/delete-address/{addressId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/address/{addressId}", method = RequestMethod.DELETE)
     public Company deleteAddress(@PathVariable Long id, @PathVariable Long addressId) {
         return companyService.deleteAddress(id, addressId);
     }
 
     @PutMapping
-    @RequestMapping(value = "/{id}/set-as-main-address/{addressId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/main-address/{addressId}", method = RequestMethod.PUT)
     public Company setAsMainAddress(@PathVariable Long id, @PathVariable Long addressId) {
         return companyService.setAsMainAddress(id, addressId);
     }

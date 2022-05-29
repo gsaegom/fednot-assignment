@@ -9,14 +9,13 @@ import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import java.util.List;
 
-//todo: think about using sets instead of lists
 @Entity(name = "COMPANIES")
 @SQLDelete(sql = "UPDATE COMPANIES SET deleted = true WHERE id=?")
-@FilterDef(name = "deletedProductFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
-@Filter(name = "deletedProductFilter", condition = "deleted = :isDeleted")
+@FilterDef(name = "deletedCompanyFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedCompanyFilter", condition = "deleted = :isDeleted")
 public class Company {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     @Embedded
@@ -29,6 +28,7 @@ public class Company {
     @ManyToMany(mappedBy = "companies")
     @JsonIgnore
     private List<Contact> contacts;
+    @JsonIgnore
     private boolean deleted = Boolean.FALSE;
 
     public Company() {

@@ -5,8 +5,6 @@ import java.util.regex.Pattern;
 
 @Embeddable
 public class Email {
-    //TODO: Double-check and improve
-//TODO: Validation is not checked since setters are used (instead of Constructors). See how to make this work.
     public Email() {
     }
 

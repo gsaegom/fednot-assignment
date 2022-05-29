@@ -6,12 +6,9 @@ import be.fednot.testguillermo.repository.ContactRepository;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
-import java.lang.invoke.MethodType;
 import java.util.List;
 
 @Service
@@ -23,7 +20,7 @@ public class ContactService {
 
 
     //TODO: Consider renaming methods
-    public List<Contact> getContacts(boolean isDeleted) {
+    public List<Contact> findAll(boolean isDeleted) {
         Session session = entityManager.unwrap(Session.class);
         Filter filter = session.enableFilter("deletedContactFilter");
         filter.setParameter("isDeleted", isDeleted);
@@ -34,7 +31,6 @@ public class ContactService {
 
 
     public Contact getContact(Long id) {
-        //TODO:Think about the orElse
         return contactRepository.findById(id).orElse(null);
     }
 
@@ -42,12 +38,16 @@ public class ContactService {
         return contactRepository.saveAndFlush(contact);
     }
 
-    //TODO:Put some thought about how to do this.
-//    @PutMapping
-//    @RequestMapping("/{id}")
-//    public Contact updateContact(@PathVariable Long id, @RequestBody Contact contact) {
-//
-//    }
+    public Contact updateContact(Long id, Contact newContact) {
+        contactRepository.findById(id).ifPresent(contact -> {
+            contact.setFullName(newContact.getFullName());
+            contact.setPhoneNumber(newContact.getPhoneNumber());
+            contact.setEmail(newContact.getEmail());
+            contact.setAddress(newContact.getAddress());
+            contact.setCompanies(newContact.getCompanies());
+        });
+        return contactRepository.saveAndFlush(contactRepository.findById(id).get());
+    }
     public void deleteContact(Long id) {
         contactRepository.deleteById(id);
     }

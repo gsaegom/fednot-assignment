@@ -16,9 +16,6 @@ import java.util.Collections;
 
 @Configuration
 public class SwaggerConfig {
-    //TODO: Use builder to remove innecessary info
-    //TODO: Find a way to clean up requests
-
     private ApiInfo apiInfo() {
         return new ApiInfo("Fednot evaluation",
                 "API documentation for the assignment given by Fednot",
